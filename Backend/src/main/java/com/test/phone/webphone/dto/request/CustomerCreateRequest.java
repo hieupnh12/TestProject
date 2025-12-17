@@ -16,7 +16,6 @@ public class CustomerCreateRequest {
 
     @NotBlank(message = "name must be not null.")
     String fullName;
-
     @PhoneNumber
     String phoneNumber;
     String email;

@@ -25,10 +25,10 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping("/")
-    public ResponseData<Integer> addCustomer(@Valid @RequestBody CustomerCreateRequest customerCreateRequest) {
+    public ResponseData<CustomerResponse> createCustomer(@Valid @RequestBody CustomerCreateRequest customerCreateRequest) {
         try {
-            customerService.addCustomer(customerCreateRequest);
-            return new ResponseData<>(HttpStatus.CREATED.value(), "User added", 1);
+            CustomerResponse customerResponse = customerService.createCustomer(customerCreateRequest);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "User added", customerResponse);
         } catch (Exception e) {
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
@@ -54,7 +54,6 @@ public class CustomerController {
 
     @GetMapping("/list")
     public ResponseData<List<CustomerResponse>> listCustomers() {
-        return new ResponseData<>(HttpStatus.OK.value(), "List Customers", List.of(new CustomerResponse("fullname", "phone"),
-                new CustomerResponse("fill name", "123")));
+        return new ResponseData<>(HttpStatus.OK.value(), "hết",null);
     }
 }
