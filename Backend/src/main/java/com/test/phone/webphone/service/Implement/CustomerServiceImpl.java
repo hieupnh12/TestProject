@@ -8,7 +8,10 @@ import com.test.phone.webphone.repository.CustomerRepo;
 import com.test.phone.webphone.service.CustomerService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 @Service
@@ -16,15 +19,6 @@ import org.springframework.web.client.ResourceAccessException;
 public class CustomerServiceImpl implements CustomerService {
     CustomerRepo customerRepo;
     CustomerMapper customerMapper;
-
-    @Override
-    public int addCustomer(CustomerCreateRequest request) {
-        System.out.printf("CustomerServiceImpl.addCustomer(): %s\n", request);
-        if (request.getFullName().equals("ok")){
-            throw new ResourceAccessException("Ok not found");
-        }
-        return 0;
-    }
 
     @Override
     public CustomerResponse createCustomer(CustomerCreateRequest request) {
@@ -35,5 +29,55 @@ public class CustomerServiceImpl implements CustomerService {
         Customers customer = customerMapper.toCustomers(request);
         var c = customerRepo.save(customer);
         return customerMapper.toCustomerResponse(c);
+    }
+
+    @Override
+    public CustomerResponse getCustomer(String customerId) {
+        Customers customer = customerRepo.findCustomersByCustomerId(Long.valueOf(customerId));
+        if (customer == null) throw new ResourceAccessException("Customer not found with id: " + customerId);
+        return customerMapper.toCustomerResponse(customer);
+    }
+
+    @Override
+    @Transactional
+    public CustomerResponse updateCustomer(String customerId, CustomerCreateRequest request) {
+        Customers customer = customerRepo.findCustomersByCustomerId(Long.valueOf(customerId));
+        if (customer == null) throw new ResourceAccessException("Customer not found with id: " + customerId);
+
+        customer = customerMapper.toCustomers(request);
+        var c = customerRepo.save(customer);
+        return customerMapper.toCustomerResponse(c);
+    }
+
+    @Override
+    @Transactional
+    public CustomerResponse deleteCustomer(String customerId) {
+        Customers customer = customerRepo.findCustomersByCustomerId(Long.valueOf(customerId));
+        if (customer == null) throw new ResourceAccessException("Customer not found with id: " + customerId);
+        customerRepo.delete(customer);
+        return customerMapper.toCustomerResponse(customer);
+    }
+
+    @Override
+    @Transactional
+    public CustomerResponse updateCustomerEachPart(String customerId, CustomerCreateRequest request) {
+        Customers customer = customerRepo.findCustomersByCustomerId(Long.valueOf(customerId));
+        if (customer == null) throw new ResourceAccessException("Customer not found with id: " + customerId);
+
+        if (request.getFullName() != null) customer.setFullName(request.getFullName());
+        if (request.getEmail() != null) customer.setEmail(request.getEmail());
+        if (request.getPhoneNumber() != null) customer.setPhoneNumber(request.getPhoneNumber());
+        if (request.getAddress() != null) customer.setAddress(request.getAddress());
+        if (request.getIsActive() != null) customer.setIsActive(request.getIsActive());
+        if (request.getBirthDate() != null) customer.setBirthDate(request.getBirthDate());
+
+        Customers saved = customerRepo.save(customer);
+        return customerMapper.toCustomerResponse(saved);
+    }
+
+    @Override
+    public Page<CustomerResponse> listAllCustomers(Pageable pageable) {
+        Page<Customers> customers = customerRepo.findAll(pageable);
+        return customers.map(c -> customerMapper.toCustomerResponse(c));
     }
 }

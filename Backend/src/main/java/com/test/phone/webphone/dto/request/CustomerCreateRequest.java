@@ -21,5 +21,6 @@ public class CustomerCreateRequest {
     String email;
     Boolean gender;
     LocalDate birthDate;
+    Boolean isActive;
     String address;
 }

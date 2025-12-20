@@ -4,7 +4,6 @@ import com.test.phone.webphone.dto.request.CustomerCreateRequest;
 import com.test.phone.webphone.dto.response.CustomerResponse;
 import com.test.phone.webphone.entity.Customers;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
