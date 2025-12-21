@@ -2,6 +2,7 @@ package com.test.phone.webphone.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // REST API → không dùng CSRF
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
 
                 // Stateless
                 .sessionManagement(session ->
@@ -25,21 +26,32 @@ public class SecurityConfig {
 
                 // Phân quyền
                 .authorizeHttpRequests(auth -> auth
-                        // FRONTEND
+                        // ⭐ Preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // ⭐ Swagger
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
+                        // ⭐ GraphQL
+                        .requestMatchers(
+                                "/graphql"
+                        ).permitAll()
+
+                        // ⭐ REST API (TẤT CẢ version)
+                        .requestMatchers(
+                                "/api/**"
+                        ).permitAll()
+
+                        // ⭐ Frontend (SPA)
                         .requestMatchers(
                                 "/",
-                                "/phoneShop/**",
                                 "/index.html",
                                 "/assets/**",
                                 "/css/**",
                                 "/js/**"
-                        ).permitAll()
-
-                        // API public
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**"
                         ).permitAll()
 
                         .anyRequest().authenticated()

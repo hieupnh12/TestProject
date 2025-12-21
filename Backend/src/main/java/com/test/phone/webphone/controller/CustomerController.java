@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class CustomerController {
 
     CustomerService customerService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseData<CustomerResponse> createCustomer(@Valid @RequestBody CustomerCreateRequest customerCreateRequest) {
         try {
             CustomerResponse customerResponse = customerService.createCustomer(customerCreateRequest);
@@ -73,10 +74,10 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/")
-    public ResponseData<Page<CustomerResponse>> getAllCustomers(Pageable pageable) {
+    @GetMapping
+    public ResponseData<Slice<CustomerResponse>> getAllCustomers(Pageable pageable) {
         try {
-            Page<CustomerResponse> customerResponses = customerService.listAllCustomers(pageable);
+            Slice<CustomerResponse> customerResponses = customerService.listAllCustomers(pageable);
             return new ResponseData<>(HttpStatus.OK.value(), "List of customers", customerResponses);
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);

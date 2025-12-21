@@ -7,15 +7,17 @@ import com.test.phone.webphone.mapper.CustomerMapper;
 import com.test.phone.webphone.repository.CustomerRepo;
 import com.test.phone.webphone.service.CustomerService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerServiceImpl implements CustomerService {
     CustomerRepo customerRepo;
     CustomerMapper customerMapper;
@@ -76,8 +78,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<CustomerResponse> listAllCustomers(Pageable pageable) {
-        Page<Customers> customers = customerRepo.findAll(pageable);
-        return customers.map(c -> customerMapper.toCustomerResponse(c));
+    public Slice<CustomerResponse> listAllCustomers(Pageable pageable) {
+        Slice<Customers> customers = customerRepo.findAll(pageable);
+        return customers.map(customerMapper::toCustomerResponse);
     }
 }
