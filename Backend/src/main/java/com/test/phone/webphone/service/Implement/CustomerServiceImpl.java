@@ -9,6 +9,7 @@ import com.test.phone.webphone.service.CustomerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -78,8 +79,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Slice<CustomerResponse> listAllCustomers(Pageable pageable) {
-        Slice<Customers> customers = customerRepo.findAll(pageable);
+    public Page<CustomerResponse> listAllCustomers(Pageable pageable) {
+        Page<Customers> customers = customerRepo.findAll(pageable);
         return customers.map(customerMapper::toCustomerResponse);
     }
 }

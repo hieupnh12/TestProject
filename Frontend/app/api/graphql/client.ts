@@ -3,7 +3,7 @@ import { HttpLink } from "@apollo/client/link/http";
 import { ApolloLink } from "@apollo/client/link";
 
 const API_URL =
-  process.env.REACT_APP_GRAPHQL_URL || "http://localhost:8080/graphql";
+  import.meta.env.VITE_GRAPHQL_URL ?? "http://localhost:8080/phoneShop/graphql";
 
 // Create HTTP link
 const httpLink = new HttpLink({

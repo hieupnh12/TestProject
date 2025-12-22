@@ -55,8 +55,18 @@ export const GET_CURRENT_USER_QUERY = gql`
 // ============ Product Queries ============
 
 export const GET_PRODUCTS_QUERY = gql`
-  query GetProducts($limit: Int, $offset: Int, $search: String, $categoryId: ID) {
-    products(limit: $limit, offset: $offset, search: $search, categoryId: $categoryId) {
+  query GetProducts(
+    $limit: Int
+    $offset: Int
+    $search: String
+    $categoryId: ID
+  ) {
+    products(
+      limit: $limit
+      offset: $offset
+      search: $search
+      categoryId: $categoryId
+    ) {
       id
       name
       description
@@ -171,7 +181,7 @@ export interface GetProductsQueryResponse {
 
 export interface GetProductsQueryVariables {
   limit?: number;
-   offset?: number;
+  offset?: number;
   search?: string;
   categoryId?: string;
 }
@@ -182,4 +192,156 @@ export interface GetProductByIdQueryResponse {
 
 export interface GetProductByIdQueryVariables {
   id: string;
+}
+
+// ============ Customer Queries ============
+
+export const GET_CUSTOMERS_QUERY = gql`
+  query GetCustomers($page: Int, $size: Int) {
+    customers(page: $page, size: $size) {
+      content {
+        customerId
+        fullName
+        phoneNumber
+        email
+        gender
+        isActive
+        birthDate
+        address
+      }
+      totalElements
+      totalPages
+      pageNumber
+      pageSize
+    }
+  }
+`;
+
+export const GET_CUSTOMER_BY_ID_QUERY = gql`
+  query GetCustomerById($customerId: ID!) {
+    customerById(customerId: $customerId) {
+      customerId
+      fullName
+      phoneNumber
+      email
+      gender
+      isActive
+      birthDate
+      address
+    }
+  }
+`;
+
+export const CREATE_CUSTOMER_MUTATION = gql`
+  mutation CreateCustomer($input: CustomerCreateInput!) {
+    createCustomer(input: $input) {
+      customerId
+      fullName
+      phoneNumber
+      email
+      gender
+      isActive
+      birthDate
+      address
+    }
+  }
+`;
+
+export const UPDATE_CUSTOMER_MUTATION = gql`
+  mutation UpdateCustomer($customerId: ID!, $input: CustomerUpdateInput!) {
+    updateCustomer(customerId: $customerId, input: $input) {
+      customerId
+      fullName
+      phoneNumber
+      email
+      gender
+      isActive
+      birthDate
+      address
+    }
+  }
+`;
+
+export const DELETE_CUSTOMER_MUTATION = gql`
+  mutation DeleteCustomer($customerId: ID!) {
+    deleteCustomer(customerId: $customerId)
+  }
+`;
+
+// ============ Customer Types ============
+
+export interface Customer {
+  customerId: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  gender?: boolean;
+  isActive?: boolean;
+  birthDate?: string;
+  address?: string;
+}
+
+export interface CustomerPage {
+  content: Customer[];
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export interface GetCustomersQueryResponse {
+  customers: CustomerPage;
+}
+
+export interface GetCustomersQueryVariables {
+  page?: number;
+  size?: number;
+}
+
+export interface GetCustomerByIdQueryResponse {
+  customerById: Customer;
+}
+
+export interface GetCustomerByIdQueryVariables {
+  customerId: string;
+}
+
+export interface CreateCustomerMutationResponse {
+  createCustomer: Customer;
+}
+
+export interface CreateCustomerMutationVariables {
+  input: {
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    gender?: boolean;
+    birthDate?: string;
+    address?: string;
+  };
+}
+
+export interface UpdateCustomerMutationResponse {
+  updateCustomer: Customer;
+}
+
+export interface UpdateCustomerMutationVariables {
+  customerId: string;
+  input: {
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    gender?: boolean;
+    isActive?: boolean;
+    birthDate?: string;
+    address?: string;
+  };
+}
+
+export interface DeleteCustomerMutationResponse {
+  deleteCustomer: boolean;
+}
+
+export interface DeleteCustomerMutationVariables {
+  customerId: string;
 }

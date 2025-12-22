@@ -7,6 +7,11 @@ import {
   GET_CURRENT_USER_QUERY,
   GET_PRODUCTS_QUERY,
   GET_PRODUCT_BY_ID_QUERY,
+  GET_CUSTOMERS_QUERY,
+  GET_CUSTOMER_BY_ID_QUERY,
+  CREATE_CUSTOMER_MUTATION,
+  UPDATE_CUSTOMER_MUTATION,
+  DELETE_CUSTOMER_MUTATION,
   type LoginMutationResponse,
   type LoginMutationVariables,
   type SignupMutationResponse,
@@ -17,6 +22,16 @@ import {
   type GetProductsQueryVariables,
   type GetProductByIdQueryResponse,
   type GetProductByIdQueryVariables,
+  type GetCustomersQueryResponse,
+  type GetCustomersQueryVariables,
+  type GetCustomerByIdQueryResponse,
+  type GetCustomerByIdQueryVariables,
+  type CreateCustomerMutationResponse,
+  type CreateCustomerMutationVariables,
+  type UpdateCustomerMutationResponse,
+  type UpdateCustomerMutationVariables,
+  type DeleteCustomerMutationResponse,
+  type DeleteCustomerMutationVariables,
 } from "./operations";
 
 // ============ Auth Hooks ============
@@ -121,5 +136,126 @@ export const useGraphQLProductById = (id: string) => {
     loading,
     error,
     refetch,
+  };
+};
+// ============ Customer Hooks ============
+
+export const useGraphQLCustomers = (page?: number, size?: number) => {
+  const { data, loading, error, refetch, fetchMore } = useQuery<
+    GetCustomersQueryResponse,
+    GetCustomersQueryVariables
+  >(GET_CUSTOMERS_QUERY, {
+    variables: { page, size },
+  });
+
+  return {
+    customers: data?.customers,
+    loading,
+    error,
+    refetch,
+    fetchMore,
+  };
+};
+
+export const useGraphQLCustomerById = (customerId: string) => {
+  const { data, loading, error, refetch } = useQuery<
+    GetCustomerByIdQueryResponse,
+    GetCustomerByIdQueryVariables
+  >(GET_CUSTOMER_BY_ID_QUERY, {
+    variables: { customerId },
+    skip: !customerId,
+  });
+
+  return {
+    customer: data?.customerById,
+    loading,
+    error,
+    refetch,
+  };
+};
+
+export const useGraphQLCreateCustomer = () => {
+  const [createCustomer, { loading, error, data }] = useMutation<
+    CreateCustomerMutationResponse,
+    CreateCustomerMutationVariables
+  >(CREATE_CUSTOMER_MUTATION, {
+    refetchQueries: [{ query: GET_CUSTOMERS_QUERY }],
+  });
+
+  return {
+    createCustomer: (
+      fullName: string,
+      phoneNumber: string,
+      email: string,
+      gender?: boolean,
+      birthDate?: string,
+      address?: string
+    ) =>
+      createCustomer({
+        variables: {
+          input: { fullName, phoneNumber, email, gender, birthDate, address },
+        },
+      }),
+    loading,
+    error,
+    data,
+  };
+};
+
+export const useGraphQLUpdateCustomer = () => {
+  const [updateCustomer, { loading, error, data }] = useMutation<
+    UpdateCustomerMutationResponse,
+    UpdateCustomerMutationVariables
+  >(UPDATE_CUSTOMER_MUTATION, {
+    refetchQueries: [{ query: GET_CUSTOMERS_QUERY }],
+  });
+
+  return {
+    updateCustomer: (
+      customerId: string,
+      fullName: string,
+      phoneNumber: string,
+      email: string,
+      gender?: boolean,
+      isActive?: boolean,
+      birthDate?: string,
+      address?: string
+    ) =>
+      updateCustomer({
+        variables: {
+          customerId,
+          input: {
+            fullName,
+            phoneNumber,
+            email,
+            gender,
+            isActive,
+            birthDate,
+            address,
+          },
+        },
+      }),
+    loading,
+    error,
+    data,
+  };
+};
+
+export const useGraphQLDeleteCustomer = () => {
+  const [deleteCustomer, { loading, error, data }] = useMutation<
+    DeleteCustomerMutationResponse,
+    DeleteCustomerMutationVariables
+  >(DELETE_CUSTOMER_MUTATION, {
+    refetchQueries: [{ query: GET_CUSTOMERS_QUERY }],
+  });
+
+  return {
+    deleteCustomer: (customerId: string) =>
+      deleteCustomer({
+        variables: { customerId },
+      }),
+    loading,
+    error,
+    data,
   };
 };

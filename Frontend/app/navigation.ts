@@ -11,4 +11,5 @@ export type NavLink = {
 export const NAV_LINKS: NavLink[] = [
   { label: "Dashboard", to: "/admin", icon: User, auth: true },
   { label: "Products", to: "/admin/products", icon: ProjectorIcon },
+  { label: "Customers", to: "/admin/customers", icon: User },
 ];

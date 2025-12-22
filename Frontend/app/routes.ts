@@ -18,6 +18,7 @@ export default [
   route("admin", "routes/admin/layout.tsx", [
     index("routes/admin/dashboard.tsx"),
     route("products", "routes/admin/products.tsx"),
+    route("customers", "routes/admin/customers.tsx"),
   ]),
 
   // Layout User

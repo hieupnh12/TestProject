@@ -25,7 +25,7 @@ public class AppConfig implements WebMvcConfigurer {
     // CORS (chỉ cần nếu dev KHÔNG dùng proxy)
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
+        registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
                 .allowedMethods("*")
                 .allowedHeaders("*")
