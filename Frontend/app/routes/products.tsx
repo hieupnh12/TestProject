@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { ProductService } from "../service";
 import ProductCard from "../components/ProductCard";
 
@@ -7,42 +8,52 @@ function ProductsList() {
   
   if (loading) {
     return (
-      <main className="container mx-auto p-4">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </main>
+      <div className="flex justify-center items-center h-96">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-red"></div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <main className="container mx-auto p-4">
-        <div className="text-center text-red-600">
-          Có lỗi khi tải sản phẩm: {error.message}
-        </div>
-      </main>
+      <div className="text-center text-red-600 bg-red-50 p-8 rounded-lg">
+        <h2 className="text-xl font-semibold mb-2">Could not load products</h2>
+        <p>{error.message}</p>
+      </div>
     );
   }
 
   return (
-    <main className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Sản phẩm</h1>
+    <>
       {products.length === 0 ? (
-        <div className="text-center text-gray-500">
-          Không có sản phẩm nào
+        <div className="text-center text-gray-500 col-span-full">
+          There are no products available at the moment.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
-    </main>
+    </>
   );
 }
 
 export default function ProductsPage() {
-  return <ProductsList />;
+  return (
+    <div className="bg-light-gray">
+      <main className="container mx-auto px-4 py-8 pt-24">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <p className="text-sm text-gray-500 mb-2">
+            <Link to="/" className="hover:text-primary-red">Home</Link> / <span>Products</span>
+          </p>
+          <h1 className="text-4xl font-bold text-gray-900">Explore Our Collection</h1>
+        </div>
+        
+        <ProductsList />
+      </main>
+    </div>
+  );
 }

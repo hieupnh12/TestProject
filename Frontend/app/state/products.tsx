@@ -4,7 +4,7 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  description?: string;
+  description: string;
   image?: string;
   stock?: number;
 };
@@ -23,7 +23,7 @@ const initialProducts: Product[] = [
     name: "Phone Alpha",
     price: 599,
     description: "A reliable smartphone with great battery life.",
-    image: "https://via.placeholder.com/320x240?text=Phone+Alpha",
+    image: "https://th.bing.com/th/id/OIP.dMHehF1BUWqEKjGFBeseNgHaKE?w=146&h=198&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     stock: 12,
   },
   {
@@ -31,7 +31,7 @@ const initialProducts: Product[] = [
     name: "Phone Beta",
     price: 799,
     description: "High performance camera and fast charging.",
-    image: "https://via.placeholder.com/320x240?text=Phone+Beta",
+    image: "https://th.bing.com/th/id/OIP.KePpwILc-Wj_XlvkAvNU6wHaKE?w=146&h=198&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     stock: 5,
   },
 ];

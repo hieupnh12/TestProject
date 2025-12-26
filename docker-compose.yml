@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: webphone-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    networks:
+      - webphone-network
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: webphone-frontend
+    ports:
+      - "5173:5173"
+    networks:
+      - webphone-network
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://localhost:8080
+
+networks:
+  webphone-network:
+    driver: bridge

@@ -21,8 +21,11 @@ public class Customers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long customerId;
+    @Column(nullable = false)
     String fullName;
+    @Column(unique = true, nullable = false)
     String phoneNumber;
+    @Column(unique = true, nullable = false)
     String email;
     Boolean gender;
     @Builder.Default
